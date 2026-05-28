@@ -41,7 +41,7 @@ services:
       - traefik.http.services.supabase-api.loadbalancer.server.port=8000
 
   studio:
-    image: supabase/studio:latest
+    image: supabase/studio:20250428-4e2e5d6
     container_name: supabase-studio
     restart: unless-stopped
 
@@ -72,7 +72,7 @@ services:
       - traefik.http.services.supabase-studio.loadbalancer.server.port=3000
 
   auth:
-    image: supabase/gotrue:latest
+    image: supabase/gotrue:v2.158.1
     container_name: supabase-auth
     restart: unless-stopped
 
@@ -96,7 +96,7 @@ services:
       GOTRUE_DISABLE_SIGNUP: false
 
   rest:
-    image: postgrest/postgrest:latest
+    image: postgrest/postgrest:v12.2.3
     container_name: supabase-rest
     restart: unless-stopped
 
@@ -110,7 +110,7 @@ services:
       PGRST_JWT_SECRET: ${JWT_SECRET}
 
   realtime:
-    image: supabase/realtime:latest
+    image: supabase/realtime:v2.30.34
     container_name: supabase-realtime
     restart: unless-stopped
 
@@ -129,7 +129,7 @@ services:
       PORT: 4000
 
   storage:
-    image: supabase/storage-api:latest
+    image: supabase/storage-api:v1.15.7
     container_name: supabase-storage
     restart: unless-stopped
 
