@@ -2,32 +2,29 @@ version: "3.9"
 
 services:
   db:
-    image: supabase/postgres:15.1.0.117
-    container_name: supabase-db
+    image: supabase/postgres:15.8.1.049
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
     volumes:
       - supabase_db:/var/lib/postgresql/data
 
   kong:
     image: kong:2.8.1
-    container_name: supabase-kong
     restart: unless-stopped
-
     depends_on:
       - auth
       - rest
       - realtime
       - storage
-
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
-
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
     volumes:
       - ./kong.yml:/home/kong/kong.yml:ro
 
@@ -41,10 +38,8 @@ services:
       - traefik.http.services.supabase-api.loadbalancer.server.port=8000
 
   studio:
-    image: supabase/studio:20250428-4e2e5d6
-    container_name: supabase-studio
+    image: supabase/studio:20250519-6b78491
     restart: unless-stopped
-
     depends_on:
       - meta
 
@@ -72,10 +67,8 @@ services:
       - traefik.http.services.supabase-studio.loadbalancer.server.port=3000
 
   auth:
-    image: supabase/gotrue:v2.158.1
-    container_name: supabase-auth
+    image: supabase/gotrue:v2.177.0
     restart: unless-stopped
-
     depends_on:
       - db
 
@@ -96,10 +89,8 @@ services:
       GOTRUE_DISABLE_SIGNUP: false
 
   rest:
-    image: postgrest/postgrest:v12.2.3
-    container_name: supabase-rest
+    image: postgrest/postgrest:v12.2.12
     restart: unless-stopped
-
     depends_on:
       - db
 
@@ -110,10 +101,8 @@ services:
       PGRST_JWT_SECRET: ${JWT_SECRET}
 
   realtime:
-    image: supabase/realtime:v2.30.34
-    container_name: supabase-realtime
+    image: supabase/realtime:v2.34.47
     restart: unless-stopped
-
     depends_on:
       - db
 
@@ -129,10 +118,8 @@ services:
       PORT: 4000
 
   storage:
-    image: supabase/storage-api:v1.15.7
-    container_name: supabase-storage
+    image: supabase/storage-api:v1.24.6
     restart: unless-stopped
-
     depends_on:
       - db
       - rest
@@ -156,10 +143,8 @@ services:
       - supabase_storage:/var/lib/storage
 
   meta:
-    image: supabase/postgres-meta:v0.84.2
-    container_name: supabase-meta
+    image: supabase/postgres-meta:v0.91.0
     restart: unless-stopped
-
     depends_on:
       - db
 
